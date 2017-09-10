@@ -48,9 +48,19 @@
 
 			<ul class="submenu">
 				<li class="">
-					<a href="<?php echo site_url('user/show')?>">
+					<a href="<?php echo site_url('resident/show')?>">
 						<i class="menu-icon fa fa-caret-right"></i>
 						Daftar Penghuni
+					</a>
+
+					<b class="arrow"></b>
+
+				</li>
+				
+				<li class="">
+					<a href="<?php echo site_url('resident/form')?>">
+						<i class="menu-icon fa fa-caret-right"></i>
+						Tambah Calon Penghuni
 					</a>
 
 					<b class="arrow"></b>
