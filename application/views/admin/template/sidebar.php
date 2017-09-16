@@ -25,9 +25,19 @@
 
 			<ul class="submenu">
 				<li class="">
-					<a href="<?php echo site_url('user/show')?>">
+					<a href="<?php echo site_url('room/show')?>">
 						<i class="menu-icon fa fa-caret-right"></i>
 						Daftar Kamar
+					</a>
+
+					<b class="arrow"></b>
+
+				</li>			
+				
+				<li class="">
+					<a href="<?php echo site_url('room/form')?>">
+						<i class="menu-icon fa fa-caret-right"></i>
+						Tambah Kamar
 					</a>
 
 					<b class="arrow"></b>

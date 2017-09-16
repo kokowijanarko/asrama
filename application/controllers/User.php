@@ -17,7 +17,7 @@ class User extends CI_Controller {
 			';
 			$this->session->set_flashdata(array('msg'=>$msg));
 			// var_dump($msg, $this->session);die;
-			redirect(site_url('home/login'));
+			redirect(site_url('login/auth'));
 		}
 		
     }

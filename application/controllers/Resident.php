@@ -17,7 +17,7 @@ class Resident extends CI_Controller {
 			';
 			$this->session->set_flashdata(array('msg'=>$msg));
 			// var_dump($msg, $this->session);die;
-			redirect(site_url('home/login'));
+			redirect(site_url('login/auth'));
 		}
 		
     }
@@ -99,14 +99,20 @@ class Resident extends CI_Controller {
 	}
 	
 	public function input(){
-		if($_POST['id'] == ''){
+		if($_POST['resident_id'] == ''){
 			
 			$params = $_POST;
 			
+			if(empty($params['resident_status']) || $params['resident_status'] !== 'on'){
+				$params['resident_status'] = '0';
+			}else{
+				$params['resident_status'] = '1';
+			}
+			
 			$this->db->trans_start();
 			$result = $this->M_resident->insert($params);
+			// var_dump($params, $result, $_POST, $this->db->last_query());die;
 			
-			// var_dump($upload, $params);die;
 			$this->db->trans_complete($result);
 			
 			if($result){
@@ -133,15 +139,17 @@ class Resident extends CI_Controller {
 			
 		}else{
 			
-			// var_dump($_POST, $_FILES);
-			
 			$params = $_POST;	
-			
+			if(empty($params['resident_status']) || $params['resident_status'] !== 'on'){
+				$params['resident_status'] = '0';
+			}else{
+				$params['resident_status'] = '1';
+			}
 			$this->db->trans_start();
-			$result = $this->M_resident->update($params['id'], $params);
+			$result = $this->M_resident->update($params['resident_id'], $params);
 			
 			
-			// var_dump($upload, $params, $result);die;
+			// var_dump($params, $result, $_POST, $this->db->last_query());die;
 			$this->db->trans_complete($result);
 			
 			if($result){

@@ -2,8 +2,8 @@
 	<div class="footer-inner">
 		<div class="footer-content">
 			<span class="bigger-120">
-				<span class="blue bolder">Ace</span>
-				Application &copy; 2013-2014
+				<span class="blue bolder">M. Angga Prasetyo</span>
+				SIR- UGM Residance Ratnaningsih Kinanthi &copy; 2017
 			</span>
 
 			&nbsp; &nbsp;

@@ -23,8 +23,8 @@
 						<div class="row">
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
-								<form class="form-horizontal" role="form" method="POST" action="<?php echo site_url('user/input')?>" enctype="multipart/form-data">
-									<input type="hidden" name="id" value="<?php echo $detail->resident_id?>"/>
+								<form class="form-horizontal" role="form" method="POST" action="<?php echo site_url('resident/input')?>">
+									<input type="hidden" name="resident_id" value="<?php echo $detail->resident_id?>"/>
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-left">Nama</label>
 										<div class="col-sm-9">
@@ -39,14 +39,14 @@
 												foreach($identity_type as $idx=>$val){
 													
 													$cek = '';
-													if($val == $detail->resident_identity_type){
+													if($val === $detail->resident_identity_type){
 														$cek = 'checked="checked"';
 													}
 													
 													echo '
 														<div class="radio">
 															<label>
-																<input name="resident_identity_type" type="radio" class="ace" value="'. $val .'"'. $cek .'/>
+																<input name="resident_identity_type" type="radio" class="ace" value="'. $val .'" '. $cek .'/>
 																<span class="lbl"> '. strtoupper($val) .'</span>
 															</label>
 														</div>
@@ -87,7 +87,6 @@
 											<input type="text" class="col-xs-10 col-sm-4" placeholder="Nomor Telp atau HP" required name="resident_contact" value="<?php echo $detail->resident_contact?>"/>
 										</div>
 									</div>
-									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-left">Tipe Penghuni</label>
 										<div class="col-sm-9">
@@ -97,13 +96,14 @@
 													foreach($type as $idx=>$val){
 														$cek = '';
 														if($val['id'] == $detail->resident_type){
-															$cek = 'checked="checked"';
+															$cek = 'selected="selected"';
 														}
 														
 														echo '
 															<option value="'. $val['id'] .'" '. $cek .'>'. $val['name'] .'</option>
 														';
 													}
+													
 												?>
 											</select>
 										</div>
