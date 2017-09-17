@@ -33,9 +33,9 @@ class Room extends CI_Controller {
 		foreach($data['list'] as $key=>$val){
 				$data['list'][$key]->photo = $this->M_room->getPhoto($val->room_id);
 		}
-		echo '<pre>';
-		var_dump($data);
-		die();
+		// echo '<pre>';
+		// var_dump($data);
+		// die();
 		$this->load->view('admin/pages/room/list', $data);
 	}
 	
