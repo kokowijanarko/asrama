@@ -135,7 +135,16 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-left"></label>
 										<div class="col-sm-9">
-											<img width="200" src="<?php echo base_url($detail->room_photo)?>"/>
+											<?php
+												foreach($detail->photo as $idx=>$val){
+													
+													echo '<img style="border:2px solid white" width="150" src="' . base_url($val->photo_name) . '"/>';
+													
+												}											
+											
+											?>										
+										
+											
 										</div>
 									</div>
 									

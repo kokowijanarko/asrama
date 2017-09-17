@@ -33,9 +33,7 @@ class Room extends CI_Controller {
 		foreach($data['list'] as $key=>$val){
 				$data['list'][$key]->photo = $this->M_room->getPhoto($val->room_id);
 		}
-		// echo '<pre>';
-		// var_dump($data);
-		// die();
+
 		$this->load->view('admin/pages/room/list', $data);
 	}
 	
@@ -69,22 +67,48 @@ class Room extends CI_Controller {
 			// var_dump($data);die();
 			
 		}else{
+			
+			$data['detail'] = $this->M_room->getDetail($id);
+			$data['detail']->photo = $this->M_room->getPhoto($id);
+
+			/*echo '<pre>';
+			var_dump($data);
+			die();*/
+			
+			$building = array(
+                array(
+                    'id'=>1,
+                    'name'=>'TB Satu'
+                ),
+                array(
+                    'id'=>2,
+                    'name'=>'TB Dua'
+                )
+                
+            );
 			$data['building'] = $building;
 			$data['type'] = $this->M_room->getType();
-			$data['detail'] = $this->M_user->getUserDetail($id);
+			$data['floor'] = $this->M_room->getFloor();
 			// var_dump($data);die();
 		}
 		$this->load->view('admin/pages/room/form', $data);
 	}
 	
 	public function input(){
-		if($_POST['room_id'] == ''){
-			$path = 'assets/admin/images/room/';			
-			$params = $_POST;
-			
+		$path = 'assets/admin/images/room/';			
+		$params = $_POST;
+		
+		if(!isset($params["room_availibility"])){
+			$params["room_availibility"] = '0';
+		}else{
+			$params["room_availibility"] = '1';
+		}
+		// var_dump($params);die;
+		if($_POST['room_id'] == ''){			
 			$this->db->trans_start();
 			$result = $this->M_room->insert($params);
-//			var_dump($result, $params);die;
+			
+			
 			if($result){
 				$id = $this->db->insert_id();
 				echo '<pre>';
@@ -98,13 +122,23 @@ class Room extends CI_Controller {
       				$_FILES['userfile']['size']     = $_FILES['photo']['size'][$i];
 					
 					$photo_name = $params['room_code'] . '_' . $_FILES['photo']['name'][$i];
-					$photo_params = array(
-						'photo_room_id' => $id,
-						'photo_name' => $path . $photo_name					
-					);
-					
 					$upload = $this->do_upload($path, $photo_name, 'userfile');
-					$result = $result && $this->M_room->insertPhoto($photo_params);
+					
+					/*echo '<pre>';
+					var_dump($upload);
+					*/
+					
+					if(!empty($upload['data'])){
+						$photo_params = array(
+							'photo_room_id' => $id,
+							'photo_name' => $path . $upload['data']['file_name']
+						);
+						$result = $result && $this->M_room->insertPhoto($photo_params);
+					}	
+					
+					/*var_dump($result, $photo_params);
+					
+					die();	*/		
 				}
 				
 			}
@@ -118,7 +152,7 @@ class Room extends CI_Controller {
 					</div>			
 				';
 				$this->session->set_flashdata(array('msg'=>$msg));
-				redirect(site_url('user/show'));
+				redirect(site_url('room/show'));
 			}else{
 				$msg = '
 					<div class="alert alert-danger alert-dismissible">
@@ -134,43 +168,62 @@ class Room extends CI_Controller {
 			
 		}else{
 			
-			var_dump($_POST, $_FILES);
+			$this->db->trans_start();		
+			$result = $this->M_room->update($params['room_id'], $params);
 			
-			$path = 'assets/admin/images/room/';
-			
-			$photo = $path . $_POST['username'] . '.jpg';
-			$photo_name = $_POST['username'] . '.jpg';
-			
-			$params = $_POST;	
-			
-			$this->db->trans_start();
-			$result = $this->M_user->update($params['id'], $params);
-			
-			if($result && $_FILES['photo']['error'] !== 4){
-				$result = $this->M_user->update($params['id'], array('photo'=>$photo));
-				$upload = $this->do_upload($path, $photo_name, 'photo');
+			// var_dump($result, $params, $_FILES);die;
+					
+			if($result && $_FILES['photo']['error'][0] == 0){				
+				$result = $result && $this->M_room->removePhoto($params['room_id']);								
+				$number_of_files_uploaded = count($_FILES['photo']['name']);
+    			for ($i = 0; $i < $number_of_files_uploaded; $i++){
+					$_FILES['userfile']['name']     = $_FILES['photo']['name'][$i];
+      				$_FILES['userfile']['type']     = $_FILES['photo']['type'][$i];
+      				$_FILES['userfile']['tmp_name'] = $_FILES['photo']['tmp_name'][$i];
+      				$_FILES['userfile']['error']    = $_FILES['photo']['error'][$i];
+      				$_FILES['userfile']['size']     = $_FILES['photo']['size'][$i];
+					
+					$photo_name = $params['room_code'] . '_' . $_FILES['photo']['name'][$i];
+					$upload = $this->do_upload($path, $photo_name, 'userfile');
+					
+					/*echo '<pre>';
+					var_dump($upload);
+					*/
+					
+					if(!empty($upload['data'])){
+						$photo_params = array(
+							'photo_room_id' => $params['room_id'],
+							'photo_name' => $path . $upload['data']['file_name']
+						);
+						$result = $result && $this->M_room->insertPhoto($photo_params);
+					}	
+					
+					/*var_dump($result, $photo_params);
+					
+					die();	*/		
+				}
+				
 			}
-			// var_dump($upload, $params, $result);die;
-			$this->db->trans_complete($result);
 			
+			$this->db->trans_complete($result);
 			if($result){
 				$msg = '
 					<div class="alert alert-success alert-dismissible">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-						<h4>Edit User Berhasil</h4>
+						<h4>Edit Kamar Berhasil</h4>
 					</div>			
 				';
 				$this->session->set_flashdata(array('msg'=>$msg));
-				redirect(site_url('user/show'));
+				redirect(site_url('room/show'));
 			}else{
 				$msg = '
 					<div class="alert alert-danger alert-dismissible">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-						<h4>Edit User Gagal</h4>
+						<h4>Edit Kamar kamar</h4>
 					</div>
 				';
 				$this->session->set_flashdata(array('msg'=>$msg));
-				redirect(site_url('user/show'));
+				redirect(site_url('room/show'));
 			}
 		}
 	}

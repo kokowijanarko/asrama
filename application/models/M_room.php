@@ -17,7 +17,10 @@ class M_room extends CI_Model
 			SELECT
 				a.`room_id`,
 			    a.`room_code`,
-    			a.`room_availibility`,
+			    a.`room_building`,
+			    IF(a.`room_building`=1, 'TB SATU', 'TB DUA') AS room_building_text,
+    			IF(a.`room_availibility` = '0', 'Kosong', 'Dihuni') AS room_availibility_text,
+				a.`room_availibility`,
     			a.`room_desc`,
     			b.type_id,
     			b.type_name,
@@ -29,7 +32,7 @@ class M_room extends CI_Model
 			FROM room a 
 			LEFT JOIN room_type b ON b.type_id = a.`room_type_id`
 			LEFT JOIN room_floor c ON c.floor_id = a.`room_floor_id`
-			ORDER BY a.`room_code`
+			ORDER BY a.`room_code` 
 		");
 		$result = $query->result();
 		return $result;
@@ -40,7 +43,10 @@ class M_room extends CI_Model
 			SELECT
 				a.`room_id`,
 			    a.`room_code`,
-    			a.`room_availibility`,
+			    a.`room_building`,
+			    IF(a.`room_building`=1, 'TB SATU', 'TB DUA') AS room_building_text,
+    			IF(a.`room_availibility` = '0', 'Kosong', 'Dihuni') AS room_availibility_text,
+				a.`room_availibility`,
     			a.`room_desc`,
     			b.type_id,
     			b.type_name,
@@ -50,7 +56,7 @@ class M_room extends CI_Model
     			c.floor_price_int
 
 			FROM room a 
-			LEFT JOIN room_type b ON b.type_id = a.`room_type`
+			LEFT JOIN room_type b ON b.type_id = a.`room_type_id`
 			LEFT JOIN room_floor c ON c.floor_id = a.`room_floor_id` 
 			WHERE 
 				a.`room_id` = $id
@@ -65,13 +71,9 @@ class M_room extends CI_Model
 		return $execute;
 	}
 	
-	public function insertPhoto($data){	
-		$execute = $this->db->insert('room_photo', $data);
-		return $execute;
-	}
 	
 	public function update($id, $data){
-		$exec = $this->db->where('id', $id);
+		$exec = $this->db->where('room_id', $id);
 		$exec = $this->db->update('room', $data);
 		return $exec;
 	}
@@ -123,6 +125,14 @@ class M_room extends CI_Model
 	
 	}
 	
-	
+	public function insertPhoto($data){	
+		$execute = $this->db->insert('room_photo', $data);
+		return $execute;
+	}
+
+	public function removePhoto($id){
+		$execute = $this->db->delete('room_photo', array('photo_room_id' => $id));
+		return $execute;
+	}
 	
 }

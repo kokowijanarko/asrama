@@ -42,9 +42,11 @@
 														<th>Kode Kamar</th>
 														<th>Gedung</th>
 														<th>Lantai</th>
+														<th>Tipe</th>
 														<th>Harga Lokal</th>
 														<th>Harga Asing</th>
 														<th>Status</th>
+														<th>Photo</th>
 														<th>Aksi</th>
 													</tr>
 												</thead>
@@ -56,17 +58,28 @@
 															echo '
 																<tr>
 																	<td>'. $no .'</td>
-																	<td>'. $val->name .'</td>
-																	<td>'. $val->username .'</td>
-																	<td>'. $val->desc .'</td>
-																	<td><img width="100px" src="'. base_url($val->photo) .'"</td>
+																	<td>'. $val->room_code .'</td>
+																	<td>'. $val->room_building_text .'</td>
+																	<td>'. $val->floor_name .'</td>
+																	<td>'. $val->type_name .'</td>
+																	<td>'. $val->floor_price .'</td>
+																	<td>'. $val->floor_price_int .'</td>
+																	<td>'. $val->room_availibility_text .'</td>
+																	<td>
+															';
+															
+															foreach($val->photo as $key=>$photo){
+																echo '<img style="border:grey 2px solid" width="100px" src="' . base_url($photo->photo_name) . '"> &nbsp';		
+															}															
+															echo'
+																	</td>
 																	<td>
 																		<div class="action-buttons">
-																			<a class="green" href="'. site_url('user/form/'. $val->id).'">
+																			<a class="green" href="'. site_url('room/form/'. $val->room_id).'">
 																				<i class="ace-icon fa fa-pencil bigger-170"></i>
 																			</a>
 
-																			<a class="red" href="'. site_url('user/remove/'. $val->id).'">
+																			<a class="red" href="'. site_url('room/remove/'. $val->room_id).'">
 																				<i class="ace-icon fa fa-trash-o bigger-170"></i>
 																			</a>
 																		</div>
@@ -110,6 +123,10 @@
 					bAutoWidth: false,
 					"aoColumns": [
 					  { "bSortable": false },
+					  null, 
+					  null, 
+					  null, 
+					  null, 
 					  null, 
 					  null, 
 					  null, 
